@@ -1,0 +1,29 @@
+services:
+  cassandra-1:
+    image: cassandra:4.1
+    container_name: cassandra1
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_SEEDS=cassandra1
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra1
+    networks:
+      - cassandra-net
+    volumes:
+      - ./init.cql:/init.cql
+    # command: bash -c "cassandra -f & sleep 30 && cqlsh -f /init.cql"
+  cassandra-2:
+    image: cassandra:4.1
+    container_name: cassandra2
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_SEEDS=cassandra1   # 第一个节点作为种子节点
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra2
+    networks:
+      - cassandra-net
+    depends_on:
+      - cassandra-1
+networks:
+  cassandra-net:
+    driver: bridge

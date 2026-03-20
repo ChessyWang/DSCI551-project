@@ -1,15 +1,14 @@
 from cassandra.cluster import Cluster
-import time
 
-cluster = Cluster(['cassandra1'])  # 连接种子节点
+cluster = Cluster(['cassandra1'])
 session = cluster.connect('test')
 
-# 模拟写入 5 条数据
-for i in range(5):
-    session.execute(
-        "INSERT INTO sensor_data (device_id, timestamp, value) VALUES (%s, %s, %s)",
-        ('device1', int(time.time()*1000), f'value_{i}')
-    )
-    time.sleep(1)
+rows = session.execute(
+    "SELECT * FROM sensor_data WHERE device_id=%s ORDER BY timestamp DESC LIMIT 5",
+    ('device1',)
+)
 
-print("Data inserted successfully.")
+print("Query results:")
+
+for row in rows:
+    print(row)

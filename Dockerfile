@@ -1,26 +1,11 @@
-FROM cassandra:4.1
+FROM python:3.10-slim
 
-# 安装 Python 和依赖
-RUN apt-get update && \
-    apt-get install -y python3 python3-venv python3-dev build-essential libssl-dev libffi-dev && \
-    rm -rf /var/lib/apt/lists/*
+# 安装 Cassandra Python driver
+RUN pip install cassandra-driver
 
-# 创建虚拟环境
-RUN python3 -m venv /opt/venv
-
-# 激活 venv 并安装 cassandra-driver
-RUN /opt/venv/bin/pip install --upgrade pip && \
-    /opt/venv/bin/pip install cassandra-driver
-
-# 拷贝初始化文件和应用脚本
-COPY init.cql /init.cql
+# 拷贝代码
 COPY src/ /app/
-
-# 设置工作目录
 WORKDIR /app
 
-# 设置 PATH 使用虚拟环境
-ENV PATH="/opt/venv/bin:$PATH"
-
-# 启动 Cassandra 并初始化 schema
-# CMD bash -c "echo 'Waiting for Cassandra...'; until cqlsh cassandra1 9042 -e 'DESCRIBE KEYSPACES'; do sleep 5; done; echo 'Cassandra is ready!'; python3 /app/write_client.py; python3 /app/query_client.py;"
+# 默认执行（你也可以后面 docker exec 手动跑）
+CMD ["tail", "-f", "/dev/null"]

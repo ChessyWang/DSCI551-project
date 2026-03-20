@@ -1,6 +1,6 @@
 services:
   cassandra-1:
-    image: chessy2471/cassandra-cluster
+    image: cassandra:4.1
     container_name: cassandra1
     ports:
       - "9042:9042"
@@ -14,7 +14,7 @@ services:
       - ./init.cql:/init.cql
     # command: bash -c "cassandra -f & sleep 30 && cqlsh -f /init.cql"
   cassandra-2:
-    image: chessy2471/cassandra-cluster
+    image: cassandra:4.1
     container_name: cassandra2
     environment:
       - CASSANDRA_CLUSTER_NAME=TestCluster
@@ -24,6 +24,13 @@ services:
       - cassandra-net
     depends_on:
       - cassandra-1
+  app:
+    build: .
+    container_name: cassandra-app
+    depends_on:
+      - cassandra-1
+    networks:
+      - cassandra-net
 networks:
   cassandra-net:
     driver: bridge

@@ -23,4 +23,4 @@ WORKDIR /app
 ENV PATH="/opt/venv/bin:$PATH"
 
 # 启动 Cassandra 并初始化 schema
-CMD bash -c "cassandra -f & sleep 30 && cqlsh -f /init.cql && tail -f /dev/null"
+# CMD bash -c "echo 'Waiting for Cassandra...'; until cqlsh cassandra1 9042 -e 'DESCRIBE KEYSPACES'; do sleep 5; done; echo 'Cassandra is ready!'; python3 /app/write_client.py; python3 /app/query_client.py;"

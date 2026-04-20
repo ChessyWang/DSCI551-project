@@ -5,7 +5,7 @@ USE test;
 
 CREATE TABLE IF NOT EXISTS sensor_data (
     device_id text,
-    timestamp bigint,
-    value text,
-    PRIMARY KEY (device_id, timestamp)
-) WITH CLUSTERING ORDER BY (timestamp DESC);
+    event_time timestamp,
+    value double,
+    PRIMARY KEY ((device_id), event_time)
+) WITH CLUSTERING ORDER BY (event_time DESC);

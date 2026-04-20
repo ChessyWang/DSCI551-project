@@ -1,14 +1,29 @@
-from cassandra.cluster import Cluster
+from cassandra_client import create_session
 
-cluster = Cluster(['cassandra1'])
-session = cluster.connect('test')
 
-rows = session.execute(
-    "SELECT * FROM sensor_data WHERE device_id=%s ORDER BY timestamp DESC LIMIT 5",
-    ('device1',)
-)
+def query_recent(session, device_id: str, limit: int = 5) -> None:
+    query_cql = """
+    SELECT device_id, event_time, value
+    FROM test.sensor_data
+    WHERE device_id = %s
+    LIMIT %s
+    """
 
-print("Query results:")
+    rows = session.execute(query_cql, (device_id, limit))
 
-for row in rows:
-    print(row)
+    print(f"Recent records for {device_id}:")
+    found = False
+    for row in rows:
+        found = True
+        print(row)
+
+    if not found:
+        print("No rows found.")
+
+
+if __name__ == "__main__":
+    cluster, session = create_session(keyspace="test")
+    try:
+        query_recent(session, "device_1", limit=5)
+    finally:
+        cluster.shutdown()

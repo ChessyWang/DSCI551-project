@@ -1,36 +1,57 @@
 services:
-  cassandra-1:
+  cassandra1:
     image: cassandra:4.1
     container_name: cassandra1
+    hostname: cassandra1
     ports:
       - "9042:9042"
     environment:
       - CASSANDRA_CLUSTER_NAME=TestCluster
       - CASSANDRA_SEEDS=cassandra1
+      - CASSANDRA_LISTEN_ADDRESS=cassandra1
       - CASSANDRA_BROADCAST_ADDRESS=cassandra1
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
     networks:
       - cassandra-net
     volumes:
+      - cassandra1_data:/var/lib/cassandra
       - ./init.cql:/init.cql
-    # command: bash -c "cassandra -f & sleep 30 && cqlsh -f /init.cql"
-  cassandra-2:
+
+  cassandra2:
     image: cassandra:4.1
     container_name: cassandra2
+    hostname: cassandra2
     environment:
       - CASSANDRA_CLUSTER_NAME=TestCluster
-      - CASSANDRA_SEEDS=cassandra1   # 第一个节点作为种子节点
+      - CASSANDRA_SEEDS=cassandra1
+      - CASSANDRA_LISTEN_ADDRESS=cassandra2
       - CASSANDRA_BROADCAST_ADDRESS=cassandra2
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
     networks:
       - cassandra-net
     depends_on:
-      - cassandra-1
+      - cassandra1
+    volumes:
+      - cassandra2_data:/var/lib/cassandra
+
   app:
-    build: .
+    image: python:3.11-slim
     container_name: cassandra-app
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    command: tail -f /dev/null
     depends_on:
-      - cassandra-1
+      - cassandra1
     networks:
       - cassandra-net
+    environment:
+      - CASSANDRA_HOSTS=cassandra1,cassandra2
+
 networks:
   cassandra-net:
     driver: bridge
+
+volumes:
+  cassandra1_data:
+  cassandra2_data:

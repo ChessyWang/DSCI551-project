@@ -25,8 +25,7 @@ def safe_write(session, consistency):
         print(f"\n[WRITE FAILED] CL={consistency}")
         print(exc)
 
-
-if __name__ == "__main__":
+def run_failure_test():
     print("Run this after stopping one Cassandra node.\n")
 
     cluster, session = create_session(keyspace="test")
@@ -38,3 +37,7 @@ if __name__ == "__main__":
         safe_write(session, "QUORUM")
     finally:
         cluster.shutdown()
+
+
+if __name__ == "__main__":
+    run_failure_test()

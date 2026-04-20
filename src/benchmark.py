@@ -4,7 +4,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from statistics import mean
 from cassandra_client import create_session
-from numpy import percentile
+from helper import percentile
 
 def run_single_op(session, write_ratio: float, num_devices: int):
     """

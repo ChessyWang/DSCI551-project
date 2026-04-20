@@ -7,7 +7,7 @@ services:
       - "9042:9042"
     environment:
       - CASSANDRA_CLUSTER_NAME=TestCluster
-      - CASSANDRA_SEEDS=cassandra1
+      - CASSANDRA_SEEDS=cassandra1,cassandra2
       - CASSANDRA_LISTEN_ADDRESS=cassandra1
       - CASSANDRA_BROADCAST_ADDRESS=cassandra1
       - CASSANDRA_RPC_ADDRESS=0.0.0.0
@@ -15,7 +15,12 @@ services:
       - cassandra-net
     volumes:
       - cassandra1_data:/var/lib/cassandra
-      - ./init.cql:/init.cql
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
 
   cassandra2:
     image: cassandra:4.1
@@ -23,50 +28,41 @@ services:
     hostname: cassandra2
     environment:
       - CASSANDRA_CLUSTER_NAME=TestCluster
-      - CASSANDRA_SEEDS=cassandra1
+      - CASSANDRA_SEEDS=cassandra1,cassandra2
       - CASSANDRA_LISTEN_ADDRESS=cassandra2
       - CASSANDRA_BROADCAST_ADDRESS=cassandra2
       - CASSANDRA_RPC_ADDRESS=0.0.0.0
     networks:
       - cassandra-net
     depends_on:
-      - cassandra1
+      cassandra1:
+        condition: service_healthy
     volumes:
       - cassandra2_data:/var/lib/cassandra
-  
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
   cassandra3:
     image: cassandra:4.1
     container_name: cassandra3
     hostname: cassandra3
     environment:
       - CASSANDRA_CLUSTER_NAME=TestCluster
-      - CASSANDRA_SEEDS=cassandra1
+      - CASSANDRA_SEEDS=cassandra1,cassandra2
       - CASSANDRA_LISTEN_ADDRESS=cassandra3
       - CASSANDRA_BROADCAST_ADDRESS=cassandra3
       - CASSANDRA_RPC_ADDRESS=0.0.0.0
     networks:
       - cassandra-net
     depends_on:
-      - cassandra1
+      cassandra2:
+        condition: service_healthy
     volumes:
       - cassandra3_data:/var/lib/cassandra
-  # memory not enough
-  # cassandra4:
-  #   image: cassandra:4.1
-  #   container_name: cassandra4
-  #   hostname: cassandra4
-  #   environment:
-  #     - CASSANDRA_CLUSTER_NAME=TestCluster
-  #     - CASSANDRA_SEEDS=cassandra1
-  #     - CASSANDRA_LISTEN_ADDRESS=cassandra4
-  #     - CASSANDRA_BROADCAST_ADDRESS=cassandra4
-  #     - CASSANDRA_RPC_ADDRESS=0.0.0.0
-  #   networks:
-  #     - cassandra-net
-  #   depends_on:
-  #     - cassandra1
-  #   volumes:
-  #     - cassandra4_data:/var/lib/cassandra
 
   app:
     image: python:3.11-slim
@@ -90,4 +86,3 @@ volumes:
   cassandra1_data:
   cassandra2_data:
   cassandra3_data:
-  # cassandra4_data:

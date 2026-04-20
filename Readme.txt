@@ -14,6 +14,17 @@ To test workload:
 To test consistency levels:
 1. python src/run_cl_test.py
 2. python src/plot_results.py --type cl
+
+To test failure:
+1. docker exec -it cassandra-app bash
+2. pip install -r requirements.txt
+3. python src/setup_db.py
+4. python src/write_client.py
+5. python src/query_client.py
+docker stop [node]
+6. python src/run_failure_test.py
+loop
+
 ==========================================================
 
 =======================deprecated=========================

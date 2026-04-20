@@ -6,8 +6,14 @@ Step：pull official mirror +install dependencies
 1. docker-compose up -d
 2. pip install -r requirements.txt
 3. python src/setup_db.py
-4. python src/write_client.py
-5. python src/query_client.py 
+
+To test workload:
+1. python src/benchmark.py
+2. python src/plot_results.py
+
+To test consistency levels:
+1. python src/run_cl_test.py
+2. python src/plot_results.py --type cl
 ==========================================================
 
 =======================deprecated=========================

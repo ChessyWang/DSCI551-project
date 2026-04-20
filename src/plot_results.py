@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import argparse
 
 
 def plot_workload_intensity(df: pd.DataFrame):
@@ -100,11 +101,55 @@ def plot_replication_factor(df: pd.DataFrame):
     plt.savefig("rf_p95_latency.png")
     plt.show()
 
+def plot_consistency_level(df: pd.DataFrame):
+    sub = df[df["experiment_type"] == "consistency_level"].copy()
+    if sub.empty:
+        print("No consistency_level data found.")
+        return
+
+    x = sub["consistency_level"]
+
+    plt.figure(figsize=(8, 5))
+    plt.bar(x, sub["throughput_ops_sec"])
+    plt.xlabel("Consistency Level")
+    plt.ylabel("Throughput (ops/sec)")
+    plt.title("Consistency Level vs Throughput")
+    plt.grid(True, axis="y")
+    plt.savefig("cl_throughput.png")
+    plt.show()
+
+    plt.figure(figsize=(8, 5))
+    plt.bar(x, sub["avg_latency_ms"])
+    plt.xlabel("Consistency Level")
+    plt.ylabel("Average Latency (ms)")
+    plt.title("Consistency Level vs Average Latency")
+    plt.grid(True, axis="y")
+    plt.savefig("cl_avg_latency.png")
+    plt.show()
+
+    plt.figure(figsize=(8, 5))
+    plt.bar(x, sub["p95_latency_ms"])
+    plt.xlabel("Consistency Level")
+    plt.ylabel("P95 Latency (ms)")
+    plt.title("Consistency Level vs P95 Latency")
+    plt.grid(True, axis="y")
+    plt.savefig("cl_p95_latency.png")
+    plt.show()
 
 if __name__ == "__main__":
-    df = pd.read_csv("results.csv")
-    print(df)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--type", type=str, default="workload",
+                        choices=["cl", "workload", "mix", "rf"],
+                        help="Type of plot to generate")
+    
+    args = parser.parse_args()
 
-    plot_workload_intensity(df)
-    plot_read_write_mix(df)
-    plot_replication_factor(df)
+    if args.type == "cl":
+        df = pd.read_csv("cl_results.csv")
+        print(df)
+        plot_consistency_level(df)
+    elif args.type == "workload":
+        df = pd.read_csv("results.csv")
+        plot_workload_intensity(df)
+        plot_read_write_mix(df)
+        plot_replication_factor(df)

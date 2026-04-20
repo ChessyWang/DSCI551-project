@@ -6,7 +6,7 @@ from statistics import mean
 from cassandra_client import create_session
 from helper import percentile
 
-def run_single_op(session, write_ratio: float, num_devices: int):
+def run_single_op(session, write_ratio: float, num_devices: int, consistency=None):
     """
     write_ratio = 0.8 means 80% writes, 20% reads
     """
@@ -19,10 +19,10 @@ def run_single_op(session, write_ratio: float, num_devices: int):
         if random.random() < write_ratio:
             event_time = int(time.time() * 1000)
             value = round(random.uniform(10.0, 100.0), 2)
-            helper.insert(session, device_id, event_time, value)
+            helper.insert(session, device_id, event_time, value, consistency)
             op_type = "write"
         else:
-            helper.query(session, device_id, limit=5)
+            helper.query(session, device_id, limit=5, consistency=consistency)
             op_type = "read"
 
     except Exception as e:
@@ -49,6 +49,7 @@ def run_workload(
     total_ops: int,
     write_ratio: float,
     num_devices: int = 100,
+    consistency: str = None,
 ):
     """
     Run one benchmark round.
@@ -63,7 +64,7 @@ def run_workload(
 
     with ThreadPoolExecutor(max_workers=concurrency) as executor:
         futures = [
-            executor.submit(run_single_op, session, write_ratio, num_devices)
+            executor.submit(run_single_op, session, write_ratio, num_devices, consistency)
             for _ in range(total_ops)
         ]
 

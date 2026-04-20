@@ -1,14 +1,23 @@
 import random
 from datetime import datetime, timedelta
-from cassandra_client import create_session
+from cassandra_client import create_session, parse_consistency_level
+from cassandra.query import SimpleStatement
 
     
-def insert(session, device_id: str, event_time, value: float) -> None:
+def insert(session, device_id: str, event_time, value: float, consistency: str = None) -> None:
     cql = """
     INSERT INTO test.sensor_data (device_id, event_time, value)
     VALUES (%s, %s, %s)
     """
-    session.execute(cql, (device_id, event_time, value))
+    if consistency is None:
+        session.execute(cql, (device_id, event_time, value))
+        return
+    
+    stmt = SimpleStatement(
+        cql,
+        consistency_level=parse_consistency_level(consistency)
+    )
+    session.execute(stmt, (device_id, event_time, value))
 
 
 def insert_sample_data(session, num_rows: int = 10) -> None:

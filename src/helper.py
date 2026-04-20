@@ -21,6 +21,7 @@ def write_results_to_csv(results, output_csv):
 
     fieldnames = [
         "experiment_type",
+        "consistency_level",
         "workload_name",
         "replication_factor",
         "concurrency",

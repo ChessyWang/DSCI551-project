@@ -1,17 +1,17 @@
 from cassandra_client import create_session
 
 
-def query_recent(session, device_id: str, limit: int = 5) -> None:
-    query_cql = """
+def query(session, device_id: str, limit: int = 5):
+    cql = """
     SELECT device_id, event_time, value
     FROM test.sensor_data
     WHERE device_id = %s
     LIMIT %s
     """
+    return list(session.execute(cql, (device_id, limit)))
 
-    rows = session.execute(query_cql, (device_id, limit))
-
-    print(f"Recent records for {device_id}:")
+def query_recent(session, device_id: str, limit: int = 5) -> None:
+    rows = query(session, device_id, limit)
     found = False
     for row in rows:
         found = True
@@ -19,6 +19,9 @@ def query_recent(session, device_id: str, limit: int = 5) -> None:
 
     if not found:
         print("No rows found.")
+
+
+    
 
 
 if __name__ == "__main__":

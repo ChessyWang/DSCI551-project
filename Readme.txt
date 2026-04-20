@@ -1,23 +1,24 @@
 Docker Hub: https://hub.docker.com/repository/docker/chessy2471/cassandra-cluster/general
 Github: https://github.com/ChessyWang/DSCI551-project
 
-Step：官方拉去镜像+install 依赖
+====================currently in use======================
+Step：pull official mirror +install dependencies
 1. docker-compose up -d
 2. pip install -r requirements.txt
 3. python src/setup_db.py
 4. python src/write_client.py
 5. python src/query_client.py 
+==========================================================
 
-
-
+=======================deprecated=========================
 Step:
-1. run docker-compose build（使用Dockerfile创建）
+1. run docker-compose build（Dockerfile）
 2. docker-compose up -d, wait 30-60 seconds for starting
 3. run docker exec -it cassandra1 cqlsh -f /init.cql to initialize schema
 4. docker exec -it cassandra1 nodetool status
 5. docker exec -it cassandra-app python3 write_client.py
 6. docker exec -it cassandra-app python3 query_client.py
-
+==========================================================
 
 File Structure
 project/

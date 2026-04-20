@@ -2,6 +2,7 @@ import random
 import csv
 from query_client import query
 from write_client import insert
+from datetime import datetime, timedelta
 def percentile(values, p):
     if not values:
         return 0.0
@@ -14,6 +15,18 @@ def percentile(values, p):
 def random_device_id(num_devices: int = 100):
     idx = random.randint(1, num_devices)
     return f"device_{idx}"
+
+
+def random_region():
+    return random.choice(["west", "east", "north"])
+
+
+def random_event_time(day_span=7):
+    now = datetime.utcnow()
+    delta_days = random.randint(0, day_span - 1)
+    delta_seconds = random.randint(0, 24 * 3600 - 1)
+    return now - timedelta(days=delta_days, seconds=delta_seconds)
+
 
 def write_results_to_csv(results, output_csv):
     if not results:

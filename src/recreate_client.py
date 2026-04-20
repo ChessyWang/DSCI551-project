@@ -14,3 +14,6 @@ def recreate_schema(session, schema_name):
     session.execute(schema["drop"])
     session.execute(schema["create"])
     print(f"Created schema: {schema_name}")
+
+def delete_all(session):
+    session.execute("DROP KEYSPACE IF EXISTS test")

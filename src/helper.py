@@ -28,40 +28,51 @@ def random_event_time(day_span=7):
     return now - timedelta(days=delta_days, seconds=delta_seconds)
 
 
-def write_results_to_csv(results, output_csv):
+# def write_results_to_csv(results, output_csv):
+#     if not results:
+#         return
+
+#     fieldnames = [
+#         "experiment_type",
+#         "consistency_level",
+#         "workload_name",
+#         "replication_factor",
+#         "concurrency",
+#         "total_ops",
+#         "write_ratio",
+#         "read_ratio",
+#         "success_ops",
+#         "error_ops",
+#         "read_ops",
+#         "write_ops",
+#         "elapsed_sec",
+#         "throughput_ops_sec",
+#         "avg_latency_ms",
+#         "p95_latency_ms",
+#         "p99_latency_ms",
+#     ]
+
+#     write_header = False
+#     try:
+#         with open(output_csv, "r", newline="", encoding="utf-8"):
+#             pass
+#     except FileNotFoundError:
+#         write_header = True
+
+#     with open(output_csv, "a", newline="", encoding="utf-8") as f:
+#         writer = csv.DictWriter(f, fieldnames=fieldnames)
+#         if write_header:
+#             writer.writeheader()
+#         for row in results:
+#             writer.writerow(row)
+
+def write_results_to_csv(results, csv_file):
     if not results:
         return
 
-    fieldnames = [
-        "experiment_type",
-        "consistency_level",
-        "workload_name",
-        "replication_factor",
-        "concurrency",
-        "total_ops",
-        "write_ratio",
-        "read_ratio",
-        "success_ops",
-        "error_ops",
-        "read_ops",
-        "write_ops",
-        "elapsed_sec",
-        "throughput_ops_sec",
-        "avg_latency_ms",
-        "p95_latency_ms",
-        "p99_latency_ms",
-    ]
+    fieldnames = list(results[0].keys())
 
-    write_header = False
-    try:
-        with open(output_csv, "r", newline="", encoding="utf-8"):
-            pass
-    except FileNotFoundError:
-        write_header = True
-
-    with open(output_csv, "a", newline="", encoding="utf-8") as f:
+    with open(csv_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
-        if write_header:
-            writer.writeheader()
-        for row in results:
-            writer.writerow(row)
+        writer.writeheader()
+        writer.writerows(results)

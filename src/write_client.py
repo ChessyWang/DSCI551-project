@@ -11,7 +11,7 @@ def insert_row_by_schema(session, schema_name, device_id, event_time, value, reg
     if mode == "no_bucket":
         cql = """
         INSERT INTO test.sensor_data (device_id, event_time, value)
-        VALUES (%s, %s, %s)s
+        VALUES (%s, %s, %s)
         """
         session.execute(cql, (device_id, event_time, value))
 

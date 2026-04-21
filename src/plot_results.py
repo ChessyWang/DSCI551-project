@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import argparse
 
+CL_CSV_FILE = "cl_results.csv"
 
 def plot_workload_intensity(df: pd.DataFrame):
     sub = df[df["experiment_type"] == "workload_intensity"].copy()
@@ -101,7 +102,10 @@ def plot_replication_factor(df: pd.DataFrame):
     plt.savefig("rf_p95_latency.png")
     plt.show()
 
-def plot_consistency_level(df: pd.DataFrame):
+def plot_consistency_level():
+    df = pd.read_csv("cl_results.csv")
+    print(df)
+
     sub = df[df["experiment_type"] == "consistency_level"].copy()
     if sub.empty:
         print("No consistency_level data found.")
@@ -137,19 +141,13 @@ def plot_consistency_level(df: pd.DataFrame):
     plt.show()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--type", type=str, default="workload",
-                        choices=["cl", "workload", "mix", "rf"],
-                        help="Type of plot to generate")
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("--type", type=str, default="workload",
+    #                     choices=["cl", "workload", "mix", "rf"],
+    #                     help="Type of plot to generate")
     
-    args = parser.parse_args()
-
-    if args.type == "cl":
-        df = pd.read_csv("cl_results.csv")
-        print(df)
-        plot_consistency_level(df)
-    elif args.type == "workload":
-        df = pd.read_csv("results.csv")
-        plot_workload_intensity(df)
-        plot_read_write_mix(df)
-        plot_replication_factor(df)
+    # args = parser.parse_args()
+    df = pd.read_csv("results.csv")
+    plot_workload_intensity(df)
+    plot_read_write_mix(df)
+    plot_replication_factor(df)

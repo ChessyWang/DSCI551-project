@@ -2,6 +2,7 @@ import sys
 from setup_db import setup
 from run_cl_test import run_cl_experiment
 from run_failure_test import run_failure_test
+from plot_results import plot_consistency_level
 
 def simulate_device_ingestion():
     print("\n=== Data Ingestion ===")
@@ -47,10 +48,10 @@ def print_menu():
     print("==============================")
     print("1. Ingest sensor data")
     print("2. Query recent readings")
-    print("3. Compare consistency modes")
-    print("4. Simulate node failure")
-    print("5. Analyze partition key impact")
-    print("6. Performance Under Load")
+    print("3. Analyze partition key impact")
+    print("4. Compare consistency modes")
+    print("5. Performance Under Load")
+    print("6. Simulate node failure")
     print("7. Exit")
     print("==============================")
 
@@ -74,6 +75,9 @@ def main():
 
         elif choice == "3":
             compare_consistency_modes()
+            ans = input("Plot results now? (y/n): ").strip().lower()
+            if ans == "y":
+                plot_consistency_level()
 
         elif choice == "4":
             simulate_node_failure()

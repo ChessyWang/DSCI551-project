@@ -9,7 +9,7 @@ def run_cql(session, path: str) -> None:
         session.execute(stmt)
         print(f"===== execute statement: {stmt} ====== ")
 
-if __name__ == "__main__":
+def setup():
     cluster, session = create_session()
     try:
         delete_all(session)
@@ -17,3 +17,4 @@ if __name__ == "__main__":
         print("---- finish database Setup ----")
     finally:
         cluster.shutdown()
+

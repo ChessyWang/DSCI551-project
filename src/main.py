@@ -1,4 +1,5 @@
 import sys
+from setup_db import setup
 from run_cl_test import run_cl_experiment
 from run_failure_test import run_failure_test
 
@@ -55,6 +56,12 @@ def print_menu():
 
 
 def main():
+    try:
+        setup()
+    except Exception as e:
+        print("Setup failed:", e)
+        print("Make sure Cassandra cluster is ready.\n")
+
     while True:
         print_menu()
         choice = input("Select an option: ").strip()

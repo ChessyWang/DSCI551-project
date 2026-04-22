@@ -32,11 +32,11 @@ def compare_consistency_modes(session = None):
     print("\nConsistency comparison finished.\n")
 
 
-def simulate_node_failure():
+def simulate_node_failure(session=None):
     print("\n=== Node Failure Simulation ===")
     print("Simulating failure of one Cassandra node and observing system behavior...\n")
 
-    run_failure_test()
+    run_failure_test(session)
 
     print("\nFailure simulation finished.\n")
 
@@ -92,7 +92,7 @@ def main():
                 print("test workload performance")
 
             elif choice == "6":
-                simulate_node_failure()
+                simulate_node_failure(session)
 
             elif choice == "7":
                 print("Exiting application.")

@@ -4,28 +4,12 @@ Github: https://github.com/ChessyWang/DSCI551-project
 ====================currently in use======================
 Step：pull official mirror +install dependencies
 1. docker-compose up -d
-2. docker exec -it cassandra-app bash
-3. pip install -r requirements.txt
-4. python src/main.py to show main menu
+2. docker exec -it cassandra1 nodetool status
+# wait until all 3 nodes are UN
+3. docker exec -it cassandra-app bash
+4. pip install -r requirements.txt
+5. python src/main.py to show main menu
 select an area to test
-
-To test workload:
-1. python src/benchmark.py
-2. python src/plot_results.py
-
-To test consistency levels:
-1. python src/run_cl_test.py
-2. python src/plot_results.py --type cl
-
-To test failure:
-1. docker exec -it cassandra-app bash
-2. pip install -r requirements.txt
-3. python src/setup_db.py
-4. python src/write_client.py
-5. python src/query_client.py
-docker stop [node]
-6. python src/run_failure_test.py
-loop
 
 ==========================================================
 

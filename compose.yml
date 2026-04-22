@@ -63,6 +63,12 @@ services:
         condition: service_healthy
     volumes:
       - cassandra3_data:/var/lib/cassandra
+    healthcheck:
+      test: ["CMD-SHELL", "nodetool status >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
 
   app:
     image: python:3.11-slim
@@ -70,9 +76,14 @@ services:
     working_dir: /workspace
     volumes:
       - ./:/workspace
-    command: tail -f /dev/null
+    command: ["sh", "/workspace/wait_for_cluster.sh"]
     depends_on:
-      - cassandra1
+      cassandra1:
+        condition: service_healthy
+      cassandra2:
+        condition: service_healthy
+      cassandra3:
+        condition: service_healthy
     networks:
       - cassandra-net
     environment:

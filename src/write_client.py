@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from db.cassandra_client import create_session, parse_consistency_level
 from cassandra.query import SimpleStatement, ConsistencyLevel
 from db.schemas import SCHEMAS
+import time
 
 def insert_row_by_schema(session, schema_name, device_id, event_time, value, region=None):
     schema = SCHEMAS[schema_name]
@@ -44,6 +45,30 @@ def insert(session, device_id: str, event_time, value: float, consistency: str =
         consistency_level=parse_consistency_level(consistency)
     )
     session.execute(stmt, (device_id, event_time, value))
+
+def insert_single_record(session):
+    
+    device_id = input("Enter device_id (e.g., device_1): ").strip()
+    if not device_id:
+        print("device_id cannot be empty.")
+        return
+
+    while True:
+        val_input = input("Enter value (float): ").strip()
+        try:
+            value = float(val_input)
+            break
+        except ValueError:
+            print("Invalid value. Please enter a number.")
+
+    ts = int(time.time() * 1000)
+
+    try:
+        insert(session, device_id, ts, value)
+        print(f"Inserted: device_id={device_id}, value={value}, ts={ts}")
+    except Exception as e:
+        print(f"Insert failed: {e}")
+
 
 
 def insert_sample_data(

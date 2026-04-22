@@ -12,38 +12,3 @@ Step：pull official mirror +install dependencies
 select an area to test
 
 ==========================================================
-
-File Structure
-project/
-├── README.md
-├── requirements.txt
-├── docker-compose.yml
-├── init.cql
-│
-├── app/
-│   ├── __init__.py
-│   ├── config.py
-│   ├── cassandra_client.py
-│   ├── setup_db.py
-│   ├── writer.py
-│   ├── reader.py
-│   ├── metrics.py
-│   └── cluster_info.py
-│
-├── experiments/
-│   ├── __init__.py
-│   ├── run_insert_benchmark.py
-│   ├── run_query_benchmark.py
-│   ├── run_cl_comparison.py
-│   └── run_failure_test.py
-│
-├── data/
-│   └── sample_events.csv
-│
-├── results/
-│   └── metrics.csv
-│
-└── scripts/
-    ├── start_cluster.sh
-    ├── load_schema.sh
-    └── demo_flow.sh

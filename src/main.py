@@ -15,20 +15,50 @@ from experiments import (
     run_consistency_demo,
 )
 
+from write_client import insert_single_record
+
+def print_insert_menu():
+    print("\n--- Consistency Analysis ---")
+    print("1. insert a new record")
+    print("2. insert random generated data(1000)")
+    print("3. Back to main menu")
+    print("(Tip: inserts use consistency level ONE for better write performance)")
+
 def simulate_device_ingestion(session):
     print("\n=== Data Ingestion ===")
     print("Simulating devices sending sensor data to Cassandra...\n")
 
-    insert_sample_data(session, num_rows=10000, num_devices = 100, consistency="ONE")
+    while True:
+        print_insert_menu()
+        sub_choice = input("Select an option: ").strip()
+
+        if sub_choice == "1":
+            insert_single_record(session)
+
+        elif sub_choice == "2":
+            insert_sample_data(session, num_rows=1000, num_devices = 100, consistency="ONE")
+
+        elif sub_choice == "3":
+            break
+
+        else:
+            print("Invalid choice, try again.")
     print("Data ingestion completed.\n")
 
 
 def query_recent_readings(session):
     print("\n=== Query Recent Data ===")
-    print("Fetching latest sensor readings for device_1...\n")
 
-    query_recent(session, "device_1", limit=5, consistency="ONE")
-    print("Query completed.\n")
+    user_input = input("Enter device_id (default: device_1): ").strip()
+    device_id = user_input if user_input else "device_1"
+
+    print(f"\nFetching latest sensor readings for {device_id}...\n")
+
+    try:
+        query_recent(session, device_id, limit=5, consistency="ONE")
+        print("Query completed.\n")
+    except Exception as e:
+        print(f"Query failed: {e}\n")
 
 def print_consistency_menu():
     print("\n--- Consistency Analysis ---")

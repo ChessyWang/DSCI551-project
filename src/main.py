@@ -6,6 +6,7 @@ from plot_results import plot_consistency_level
 from write_client import insert_sample_data
 from cassandra_client import create_session
 from query_client import query_recent
+from read_after_write_test import run_consistency_demo
 
 def simulate_device_ingestion(session):
     print("\n=== Data Ingestion ===")
@@ -26,8 +27,28 @@ def query_recent_readings(session):
 def compare_consistency_modes(session = None):
     print("\n=== Consistency Mode Comparison ===")
     print("Comparing performance under different consistency levels (ONE vs QUORUM)...\n")
+    try:
+        user_input = input("Enter number of rounds (default 5): ").strip()
 
-    run_cl_experiment(session)
+        if user_input == "":
+            rounds = 5
+        else:
+            rounds = int(user_input)
+
+        # 防止太离谱
+        if rounds <= 0:
+            print("Invalid input, using default = 5")
+            rounds = 5
+        elif rounds > 10000:
+            print("Too large, capping at 100 for demo")
+            rounds = 3000
+
+    except ValueError:
+        print("Invalid input, using default = 5")
+        rounds = 5
+
+    # run_cl_experiment(session)
+    run_consistency_demo(session, rounds)
 
     print("\nConsistency comparison finished.\n")
 
@@ -36,7 +57,8 @@ def simulate_node_failure(session=None):
     print("\n=== Node Failure Simulation ===")
     print("Simulating failure of one Cassandra node and observing system behavior...\n")
 
-    run_failure_test(session)
+    # run_failure_test(session)
+    run_cl_experiment(session)
 
     print("\nFailure simulation finished.\n")
 
@@ -47,12 +69,12 @@ def print_menu():
     print("\n==============================")
     print(" Distributed IoT Data Platform ")
     print("==============================")
-    print("1. Ingest sensor data")
-    print("2. Query recent readings")
-    print("3. Analyze partition key impact")
-    print("4. Compare consistency modes")
-    print("5. Performance Under Load")
-    print("6. Simulate node failure")
+    print("1. Ingest sensor data") # 5000
+    print("2. View latest sensor readings") # device_id
+    print("3. Analyze partition key impact") # 
+    print("4. Check recent data consistency") # read after write stale read
+    print("5. Simulate high traffic workload") # 
+    print("6. Simulate node failure") 
     print("7. Exit")
     print("==============================")
 
@@ -83,9 +105,9 @@ def main():
             
             elif choice == "4":
                 compare_consistency_modes(session)
-                ans = input("Plot results now? (y/n): ").strip().lower()
-                if ans == "y":
-                    plot_consistency_level()
+                # ans = input("Plot results now? (y/n): ").strip().lower()
+                # if ans == "y":
+                #     plot_consistency_level()
             
             elif choice == "5":
                 #todo: workload intensity

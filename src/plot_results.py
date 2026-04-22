@@ -149,5 +149,5 @@ if __name__ == "__main__":
     # args = parser.parse_args()
     df = pd.read_csv("results.csv")
     plot_workload_intensity(df)
-    plot_read_write_mix(df)
-    plot_replication_factor(df)
+    # plot_read_write_mix(df)
+    # plot_replication_factor(df)

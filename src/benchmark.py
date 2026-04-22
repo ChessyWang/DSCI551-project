@@ -207,7 +207,13 @@ def replication_factor_experiment(session, output_csv: str, rf_label: int):
     helper.write_results_to_csv(results, output_csv)
 
 
+def test_run_intensity_experiment(session):
+    cluster, session = create_session(keyspace="test")
+    try:
 
+        workload_intensity_experiment(session, "results.csv")
+    finally:
+        cluster.shutdown()
 # -----------------------------
 # Main
 # -----------------------------
@@ -219,7 +225,7 @@ if __name__ == "__main__":
         workload_intensity_experiment(session, "results.csv")
 
         # 2) read/write mix comparison
-        read_write_mix_experiment(session, "results.csv")
+        # read_write_mix_experiment(session, "results.csv")
 
         # 3) replication factor comparison
         # IMPORTANT:

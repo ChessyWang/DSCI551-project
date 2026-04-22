@@ -7,6 +7,8 @@ from write_client import insert_sample_data
 from cassandra_client import create_session
 from query_client import query_recent
 from read_after_write_test import run_consistency_demo
+from benchmark_schema import test_run_schema_exploration
+from benchmark import test_run_intensity_experiment
 
 def simulate_device_ingestion(session):
     print("\n=== Data Ingestion ===")
@@ -52,6 +54,18 @@ def compare_consistency_modes(session = None):
 
     print("\nConsistency comparison finished.\n")
 
+def schema_test(session = None):
+    test_run_schema_exploration(session)
+    return
+
+def simulate_workload_intensity(session=None):
+    print("\n=== Workload Intensity Simulation ===")
+    print("Simulating increasing workload intensity and observing system behavior...\n")
+
+    test_run_intensity_experiment(session)
+    print("\nWorkload intensity simulation finished.\n")
+
+    return
 
 def simulate_node_failure(session=None):
     print("\n=== Node Failure Simulation ===")
@@ -100,8 +114,7 @@ def main():
                 query_recent_readings(session)
             
             elif choice == "3":
-                #todo: schema test
-                print("test schema")
+                schema_test(session)
             
             elif choice == "4":
                 compare_consistency_modes(session)
@@ -110,8 +123,7 @@ def main():
                 #     plot_consistency_level()
             
             elif choice == "5":
-                #todo: workload intensity
-                print("test workload performance")
+                simulate_workload_intensity(session)
 
             elif choice == "6":
                 simulate_node_failure(session)

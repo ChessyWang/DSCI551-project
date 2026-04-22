@@ -147,10 +147,8 @@ def run_schema_exploration(session):
     helper.write_results_to_csv(results, RESULT_CSV)
     print(f"Results written to {RESULT_CSV}")
 
-
-if __name__ == "__main__":
+def test_run_schema_exploration(session):
     cluster, session = create_session()
-
     try:
         recreate_client.recreate_keyspace(session, rf=2, KEYSPACE=KEYSPACE)
         run_schema_exploration(session)
@@ -158,3 +156,6 @@ if __name__ == "__main__":
     finally:
         recreate_client.delete_all(session)
         cluster.shutdown()
+
+if __name__ == "__main__":
+    test_run_schema_exploration(session=None)

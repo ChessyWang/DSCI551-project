@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-CSV_FILE = "schema_results.csv"
+CSV_FILE = "../schema_results.csv"
 
 
 def plot_throughput_by_schema(df):

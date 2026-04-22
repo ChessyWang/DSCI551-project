@@ -10,7 +10,7 @@ import write_client
 from schemas import SCHEMAS
 import recreate_client
 from cassandra_client import create_session
-
+from plot_schema_results import plot_schema_results
 
 KEYSPACE = "test"
 RESULT_CSV = "schema_results.csv"
@@ -136,8 +136,6 @@ def run_schema_exploration(session):
     ]
 
     for schema_name in SCHEMAS:
-        recreate_client.recreate_schema(session, schema_name)
-        preload_data(session, schema_name, num_rows=3000, num_devices=100)
 
         for cfg in experiment_configs:
             print(f"Running {schema_name} with config {cfg}")
@@ -150,12 +148,15 @@ def run_schema_exploration(session):
 def test_run_schema_exploration(session):
     cluster, session = create_session()
     try:
-        recreate_client.recreate_keyspace(session, rf=2, KEYSPACE=KEYSPACE)
+        # for schema_name in SCHEMAS:
+        #     preload_data(session, schema_name, num_rows=3000, num_devices=100)
+        # recreate_client.recreate_keyspace(session, rf=2, KEYSPACE=KEYSPACE)
         run_schema_exploration(session)
 
     finally:
-        recreate_client.delete_all(session)
-        cluster.shutdown()
+        plot_schema_results()
+        # recreate_client.delete_all(session)
+        # cluster.shutdown()
 
 if __name__ == "__main__":
     test_run_schema_exploration(session=None)

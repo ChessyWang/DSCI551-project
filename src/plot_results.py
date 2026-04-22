@@ -139,7 +139,9 @@ def plot_consistency_level():
     plt.grid(True, axis="y")
     plt.savefig("cl_p95_latency.png")
     plt.show()
-
+def plot_result():
+    df = pd.read_csv("results.csv")
+    plot_workload_intensity(df)
 if __name__ == "__main__":
     # parser = argparse.ArgumentParser()
     # parser.add_argument("--type", type=str, default="workload",
@@ -147,7 +149,6 @@ if __name__ == "__main__":
     #                     help="Type of plot to generate")
     
     # args = parser.parse_args()
-    df = pd.read_csv("results.csv")
-    plot_workload_intensity(df)
+    plot_result()
     # plot_read_write_mix(df)
     # plot_replication_factor(df)

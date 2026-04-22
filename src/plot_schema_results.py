@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-CSV_FILE = "../schema_results.csv"
+CSV_FILE = "./schema_results.csv"
 
 
 def plot_throughput_by_schema(df):
@@ -84,6 +84,13 @@ def plot_latency_vs_concurrency(df):
     plt.tight_layout()
     plt.savefig("latency_vs_concurrency.png")
     plt.show()
+
+def plot_schema_results():
+    df = pd.read_csv(CSV_FILE)
+    print(df)
+    plot_throughput_by_schema(df)
+    plot_avg_latency_by_schema(df)
+
 
 
 if __name__ == "__main__":

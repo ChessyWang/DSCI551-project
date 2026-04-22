@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from statistics import mean
 from cassandra_client import create_session
 from helper import percentile
-
+from plot_results import plot_result
 def run_single_op(session, write_ratio: float, num_devices: int, consistency=None):
     """
     write_ratio = 0.8 means 80% writes, 20% reads
@@ -213,7 +213,10 @@ def test_run_intensity_experiment(session):
 
         workload_intensity_experiment(session, "results.csv")
     finally:
-        cluster.shutdown()
+        plot_result()
+
+
+        # cluster.shutdown()
 # -----------------------------
 # Main
 # -----------------------------

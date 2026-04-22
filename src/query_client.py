@@ -9,7 +9,7 @@ def query_range(session, schema_name, device_id, start_time, end_time, region=No
     if mode == "no_bucket":
         cql = """
         SELECT device_id, event_time, value
-        FROM test.sensor_data
+        FROM test.sensor_dataa
         WHERE device_id = %s
           AND event_time >= %s
           AND event_time <= %s
@@ -20,7 +20,7 @@ def query_range(session, schema_name, device_id, start_time, end_time, region=No
         # single-day bucket range query
         cql = """
         SELECT device_id, day_bucket, event_time, value
-        FROM test.sensor_data
+        FROM test.sensor_datab
         WHERE device_id = %s
           AND day_bucket = %s
           AND event_time >= %s
@@ -31,7 +31,7 @@ def query_range(session, schema_name, device_id, start_time, end_time, region=No
     elif mode == "region":
         cql = """
         SELECT region, event_time, device_id, value
-        FROM test.sensor_data
+        FROM test.sensor_datac
         WHERE region = %s
           AND event_time >= %s
           AND event_time <= %s
@@ -45,7 +45,7 @@ def query_by_schema(session, schema_name, device_id, limit=5, region=None):
     if mode == "no_bucket":
         cql = f"""
         SELECT device_id, event_time, value
-        FROM test.sensor_data
+        FROM test.sensor_dataa
         WHERE device_id = %s
         LIMIT {limit}
         """
@@ -56,7 +56,7 @@ def query_by_schema(session, schema_name, device_id, limit=5, region=None):
         day_bucket = datetime.utcnow().date()
         cql = f"""
         SELECT device_id, day_bucket, event_time, value
-        FROM test.sensor_data
+        FROM test.sensor_datab
         WHERE device_id = %s AND day_bucket = %s
         LIMIT {limit}
         """
@@ -65,7 +65,7 @@ def query_by_schema(session, schema_name, device_id, limit=5, region=None):
     elif mode == "region":
         cql = f"""
         SELECT region, event_time, device_id, value
-        FROM test.sensor_data
+        FROM test.sensor_datac
         WHERE region = %s
         LIMIT {limit}
         """

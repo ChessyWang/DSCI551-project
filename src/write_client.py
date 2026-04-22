@@ -1,8 +1,9 @@
 import random
 from datetime import datetime, timedelta
 from cassandra_client import create_session, parse_consistency_level
-from cassandra.query import SimpleStatement
+from cassandra.query import SimpleStatement, ConsistencyLevel
 from schemas import SCHEMAS
+import time
 
 def insert_row_by_schema(session, schema_name, device_id, event_time, value, region=None):
     schema = SCHEMAS[schema_name]
@@ -46,15 +47,27 @@ def insert(session, device_id: str, event_time, value: float, consistency: str =
     session.execute(stmt, (device_id, event_time, value))
 
 
-def insert_sample_data(session, num_rows: int = 10, consistency: str = None) -> None:
+def insert_sample_data(
+    session,
+    num_rows: int = 5000,
+    num_devices: int = 20,
+    consistency: str = None
+) -> None:
     now = datetime.utcnow()
-    for i in range(num_rows):
-        device_id = f"device_{random.randint(1, 3)}"
-        event_time = now + timedelta(seconds=i)
-        value = round(random.uniform(10, 100), 2)
-        insert(session, device_id, event_time, value, consistency=consistency)
-        print(f"Inserted: {device_id}, {event_time}, {value}")
 
+    for i in range(num_rows):
+        device_id = f"device_{random.randint(1, num_devices)}"
+
+        event_time = now - timedelta(seconds=i)
+
+        value = round(random.uniform(10, 100), 2)
+
+        insert(session, device_id, event_time, value, consistency=consistency)
+
+        if i % 1000 == 0 and i > 0:
+            print(f"Inserted {i} rows...")
+
+    print(f"\n✅ Finished inserting {num_rows} rows\n")
 
 if __name__ == "__main__":
     cluster, session = create_session(keyspace="test")

@@ -8,7 +8,7 @@ def safe_read(session, consistency):
         result = query_recent(session, "device_1", limit=5, consistency=consistency)
         print(f"\n[READ SUCCESS] CL={consistency}")
         print(f"Rows returned: {len(result)}")
-        # print(f"Latency: {result['latency_ms']:.2f} ms")
+        print(f"Latency: {result['latency_ms']:.2f} ms")
     except Exception as exc:
         print(f"\n[READ FAILED] CL={consistency}")
         print(exc)
@@ -16,7 +16,7 @@ def safe_read(session, consistency):
 
 def safe_write(session, consistency):
     try:
-        result = insert_sample_data(session, num_rows=10, consistency=consistency)
+        result = insert_sample_data(session, num_rows=100, consistency=consistency)
         print(f"\n[WRITE RESULT] CL={consistency}")
         # print(f"Success: {result['success']}")
         # print(f"Failure: {result['failure']}")

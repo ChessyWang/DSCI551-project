@@ -36,7 +36,30 @@ def run_single_op(session, write_ratio: float, num_devices: int, consistency=Non
         "op_type": op_type,
     }
 
+def run_single_op_with_key(session, write_ratio: float, device_id: str, consistency=None):
+    start = time.perf_counter()
+    success = 1
 
+    try:
+        # if random.random() < write_ratio:
+        #     event_time = int(time.time() * 1000)
+        #     value = round(random.uniform(10.0, 100.0), 2)
+        #     helper.insert(session, device_id, event_time, value, consistency)
+        #     op_type = "write"
+        # else:
+        helper.query(session, device_id, limit=5, consistency=consistency)
+        op_type = "read"
+
+    except Exception:
+        success = 0
+        op_type = "error"
+
+    latency_ms = (time.perf_counter() - start) * 1000
+    return {
+        "success": success,
+        "latency_ms": latency_ms,
+        "op_type": op_type,
+    }
 
 
 # -----------------------------
@@ -50,10 +73,12 @@ def run_workload(
     write_ratio: float,
     num_devices: int = 100,
     consistency: str = None,
+    query_keys = None
 ):
     """
     Run one benchmark round.
     """
+    print(f"total ops: {total_ops}, write_ratio: {write_ratio}")
     latencies = []
     success_count = 0
     read_count = 0
@@ -63,10 +88,23 @@ def run_workload(
     start_time = time.perf_counter()
 
     with ThreadPoolExecutor(max_workers=concurrency) as executor:
-        futures = [
-            executor.submit(run_single_op, session, write_ratio, num_devices, consistency)
-            for _ in range(total_ops)
-        ]
+        if query_keys is not None:
+            print(" start op for specific keys")
+            futures = [
+                executor.submit(
+                    run_single_op_with_key,
+                    session,
+                    write_ratio,
+                    device_id,
+                    consistency
+                )
+                for device_id in query_keys
+            ]
+        else:
+            futures = [
+                executor.submit(run_single_op, session, write_ratio, num_devices, consistency)
+                for _ in range(total_ops)
+            ]
 
         for future in as_completed(futures):
             result = future.result()

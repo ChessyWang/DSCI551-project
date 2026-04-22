@@ -1,14 +1,19 @@
 import sys
-from setup_db import setup
-from run_cl_test import run_cl_experiment
-from run_failure_test import run_failure_test
+from db.setup_db import setup
+from db.cassandra_client import create_session
+
 from plot_results import plot_consistency_level
 from write_client import insert_sample_data
-from cassandra_client import create_session
+
 from query_client import query_recent
-from read_after_write_test import run_consistency_demo
-from benchmark_schema import test_run_schema_exploration
-from benchmark import test_run_intensity_experiment
+from benchmark.benchmark_schema import test_run_schema_exploration
+from benchmark.benchmark import test_run_intensity_experiment
+
+from experiments import (
+    run_cl_experiment,
+    run_failure_test,
+    run_consistency_demo,
+)
 
 def simulate_device_ingestion(session):
     print("\n=== Data Ingestion ===")

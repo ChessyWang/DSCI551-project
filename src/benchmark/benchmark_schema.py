@@ -7,9 +7,8 @@ from statistics import mean
 import helper
 import query_client
 import write_client 
-from schemas import SCHEMAS
-import recreate_client
-from cassandra_client import create_session
+from db.schemas import SCHEMAS
+from db.cassandra_client import create_session
 from plot_schema_results import plot_schema_results
 
 KEYSPACE = "test"

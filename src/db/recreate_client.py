@@ -1,5 +1,5 @@
 
-from schemas import SCHEMAS
+from .schemas import SCHEMAS
 def recreate_keyspace(session, rf=2, KEYSPACE="test"):
     session.execute(f"DROP KEYSPACE IF EXISTS {KEYSPACE}")
     session.execute(f"""

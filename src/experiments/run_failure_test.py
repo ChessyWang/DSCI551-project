@@ -1,13 +1,12 @@
-from cassandra_client import create_session
-from query_client import query, query_recent
-from write_client import insert, insert_sample_data
-
+from db.cassandra_client import create_session
+from query_client import query
+from write_client import insert
 
 import time
 import random
 
 def single_write(session, consistency):
-    device_id = "device_1"   # 或 random_device_id
+    device_id = "device_1"
     event_time = int(time.time() * 1000)
     value = round(random.uniform(10.0, 100.0), 2)
 

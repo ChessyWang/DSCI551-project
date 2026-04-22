@@ -1,9 +1,8 @@
 import random
 from datetime import datetime, timedelta
-from cassandra_client import create_session, parse_consistency_level
+from db.cassandra_client import create_session, parse_consistency_level
 from cassandra.query import SimpleStatement, ConsistencyLevel
-from schemas import SCHEMAS
-import time
+from db.schemas import SCHEMAS
 
 def insert_row_by_schema(session, schema_name, device_id, event_time, value, region=None):
     schema = SCHEMAS[schema_name]

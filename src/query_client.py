@@ -1,7 +1,8 @@
-from cassandra_client import create_session, parse_consistency_level
 from cassandra.query import SimpleStatement
-from schemas import SCHEMAS
-from datetime import datetime, timedelta
+from datetime import datetime
+from db.schemas import SCHEMAS
+from db.cassandra_client import create_session, parse_consistency_level
+
 def query_range(session, schema_name, device_id, start_time, end_time, region=None):
     schema = SCHEMAS[schema_name]
     mode = schema["query_mode"]

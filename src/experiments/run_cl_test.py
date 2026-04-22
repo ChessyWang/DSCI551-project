@@ -1,5 +1,5 @@
-from cassandra_client import create_session
-from benchmark import run_workload
+from db.cassandra_client import create_session
+from benchmark.benchmark import run_workload
 import helper
 import random
 import time

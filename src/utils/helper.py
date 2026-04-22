@@ -1,8 +1,9 @@
 import random
 import csv
+from datetime import datetime, timedelta
 from query_client import query
 from write_client import insert
-from datetime import datetime, timedelta
+
 def percentile(values, p):
     if not values:
         return 0.0

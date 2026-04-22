@@ -4,12 +4,13 @@ import time
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from statistics import mean
-import helper
+from utils import helper
 import query_client
 import write_client 
 from db.schemas import SCHEMAS
 from db.cassandra_client import create_session
-from plot_schema_results import plot_schema_results
+from utils.plot_schema_results import plot_schema_results
+from utils.path import get_results_path
 
 KEYSPACE = "test"
 RESULT_CSV = "schema_results.csv"
@@ -141,8 +142,9 @@ def run_schema_exploration(session):
             result = run_benchmark(session, schema_name, **cfg)
             results.append(result)
 
-    helper.write_results_to_csv(results, RESULT_CSV)
-    print(f"Results written to {RESULT_CSV}")
+    file_path = get_results_path(RESULT_CSV)
+    helper.write_results_to_csv(results, file_path)
+    print(f"Results written to {file_path}")
 
 def test_run_schema_exploration(session):
     cluster, session = create_session()

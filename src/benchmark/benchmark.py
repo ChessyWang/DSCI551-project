@@ -1,11 +1,14 @@
-import helper
 import random
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from statistics import mean
 from db.cassandra_client import create_session
-from helper import percentile
-from plot_results import plot_result
+from utils import helper
+from utils.helper import percentile
+from utils.plot_results import plot_result
+from utils.path import get_results_path
+
+CSV_FILE = "wl_results.csv"
 
 def run_single_op(session, write_ratio: float, num_devices: int, consistency=None):
     """
@@ -212,7 +215,7 @@ def test_run_intensity_experiment(session):
     cluster, session = create_session(keyspace="test")
     try:
 
-        workload_intensity_experiment(session, "results.csv")
+        workload_intensity_experiment(session, get_results_path(CSV_FILE))
     finally:
         plot_result()
 
@@ -226,7 +229,7 @@ if __name__ == "__main__":
 
     try:
         # 1) workload intensity comparison
-        workload_intensity_experiment(session, "results.csv")
+        workload_intensity_experiment(session, get_results_path(CSV_FILE))
 
         # 2) read/write mix comparison
         # read_write_mix_experiment(session, "results.csv")

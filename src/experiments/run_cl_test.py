@@ -1,10 +1,13 @@
 from db.cassandra_client import create_session
 from benchmark.benchmark import run_workload
-import helper
+from utils import helper
 import random
 import time
+from utils.path import get_results_path
 
-CONSISTENCY_LEVELS = ["ONE", "QUORUM"]
+CL_CSV_PATH = "cl_results.csv"
+
+CONSISTENCY_LEVELS = ["QUORUM", "ONE"]
 
 def generate_uniform_query_keys(num_devices, total_ops):
     per_device = total_ops // num_devices
@@ -31,8 +34,8 @@ def run_cl_experiment(session = None, num_devices = 100, total_ops = 5000):
         print("Created session for consistency-level experiment")
 
     time.sleep(5)
-    levels = CONSISTENCY_LEVELS[:]
-    random.shuffle(levels)
+    # levels = CONSISTENCY_LEVELS[:]
+    # random.shuffle(levels)
     # generate keys for query
     query_keys = generate_uniform_query_keys(num_devices, total_ops)
 
@@ -47,7 +50,7 @@ def run_cl_experiment(session = None, num_devices = 100, total_ops = 5000):
         #     num_devices=100,
         #     consistency="ONE",
         # )
-        for cl in levels:
+        for cl in CONSISTENCY_LEVELS:
             print(f"\nRunning CL={cl}")
             result = run_workload(
                 session=session,
@@ -65,7 +68,7 @@ def run_cl_experiment(session = None, num_devices = 100, total_ops = 5000):
 
             results.append(result)
 
-        helper.write_results_to_csv(results, "cl_results.csv")
+        helper.write_results_to_csv(results, get_results_path(CL_CSV_PATH))
     finally:
         if created_here and cluster is not None:
             cluster.shutdown()

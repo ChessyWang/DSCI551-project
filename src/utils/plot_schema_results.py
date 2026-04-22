@@ -1,9 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from .path import get_results_path
 
+# CSV_FILE = Path(__file__).resolve().parents[1] / "results" / "schema_results.csv"
 
-CSV_FILE = "./schema_results.csv"
-
+# CSV_FILE = "./schema_results.csv"
 
 def plot_throughput_by_schema(df):
     grouped = df.groupby("schema_name", as_index=False)["throughput_ops_sec"].mean()
@@ -86,7 +87,7 @@ def plot_latency_vs_concurrency(df):
     plt.show()
 
 def plot_schema_results():
-    df = pd.read_csv(CSV_FILE)
+    df = pd.read_csv(get_results_path("schema_results.csv"))
     print(df)
     plot_throughput_by_schema(df)
     plot_avg_latency_by_schema(df)
@@ -94,7 +95,7 @@ def plot_schema_results():
 
 
 if __name__ == "__main__":
-    df = pd.read_csv(CSV_FILE)
+    df = pd.read_csv(get_results_path("schema_results.csv"))
     print(df)
 
     plot_throughput_by_schema(df)

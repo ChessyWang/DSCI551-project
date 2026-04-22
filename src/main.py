@@ -71,8 +71,7 @@ def simulate_node_failure(session=None):
     print("\n=== Node Failure Simulation ===")
     print("Simulating failure of one Cassandra node and observing system behavior...\n")
 
-    # run_failure_test(session)
-    run_cl_experiment(session)
+    run_failure_test(session)
 
     print("\nFailure simulation finished.\n")
 

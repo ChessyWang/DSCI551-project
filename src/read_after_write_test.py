@@ -19,8 +19,6 @@ def read_latest(session, device_id, cl):
     return list(result)
 
 def read_after_write_test(session, device_id, cl_write, cl_read, write_label, read_label, rounds=5):
-    # print("DEBUG write cl:", cl_write, type(cl_write))
-    # print("DEBUG read cl:", cl_read, type(cl_read))
     print(f"\nTesting Read-After-Write with WRITE={write_label}, READ={read_label}")
 
     success = 0
@@ -32,7 +30,6 @@ def read_after_write_test(session, device_id, cl_write, cl_read, write_label, re
         rows = read_latest(session, device_id, cl_read)
 
         if rows and rows[0].value == value:
-            # print(f"[Round {i+1}] ✅ Fresh read")
             success += 1
         else:
             got = rows[0].value if rows else None

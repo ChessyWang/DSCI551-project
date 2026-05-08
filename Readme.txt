@@ -1,8 +1,8 @@
-Docker Hub: https://hub.docker.com/repository/docker/chessy2471/cassandra-cluster/general
 Github: https://github.com/ChessyWang/DSCI551-project
 
 ====================currently in use======================
 Step：pull official mirror + install dependencies
+make sure you have enough memory to start all 3 replication nodes
 1. docker-compose up -d
 2. docker exec -it cassandra1 nodetool status
 # wait until all 3 nodes are UN
